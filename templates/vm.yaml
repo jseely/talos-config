@@ -1,0 +1,85 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: default-ubuntu-test-disk0
+spec:
+  pvc:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 32Gi
+    storageClassName: local-path
+  source:
+    http:
+      url: https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: ubuntu-test
+spec:
+  runStrategy: Always
+  template:
+    metadata:
+      labels:
+        vmi.kubevirt.io/name: ubuntu-test
+    spec:
+      domain:
+        devices:
+          disks:
+            - name: containerdisk
+              disk: {}
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
+        cpu:
+          cores: 4
+          threads: 8
+          sockets: 1
+        resources:
+          requests:
+            memory: 8Gi
+      volumes:
+        - name: containerdisk
+          dataVolume:
+            name: default-ubuntu-test-disk0
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            userData: |-
+              #cloud-config
+              manage_etc_hosts: true
+              hostname: ubuntu-test
+              ssh_pwauth: false
+              chpasswd: 
+                expire: false
+              users:
+                - name: justin
+                  lock_passwd: false
+                  sudo: ['ALL=(ALL) NOPASSWD:ALL']
+                  shell: /bin/bash
+                  ssh_authorized_keys:
+                    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDCuamlYElv7MYXmCh4NlR0rGWmhCVpZj1EYoTitdqENHtguVHua+B3Q0CTZr6NtUR9wS6DTT84OASHsXjR3q5U2nnekOCqwAbxGgAhUJGDaFmWMd6cSL8lOHlWMGwX+x/A7mHnCsOQAA3cUo6GmiWUv5DtlLL9a6PA7vcgJgP03c1WHmAEef88u36Dmyl7kHGuDZ7QR98WkgopW/lxxdCRxq6t/8am67DTxYxi9gXsVYSWRsFEON413HKx5F/kI4O4vRUIKZSO/CJuILdaPshA9RSNfEzMJeWasrmlPMS4RlId37PBPKsBwvGm45SvggGuWpPdGVXhcJGjQG0Om1ztudu/g6PL2xzL9zJJkIP91UcabDV7UJYptNLah1tyh05cIojzJhVWxMxr67T0illZRKXky6DZs/yXEw4b5IsqC/Cn+zvIsKR5xUUQfYQ8lg9+uGiWdy9CNDrRtmly3X7ddC2Bq+g2Eqkgo1r+2u3uc5aWE39QMVdx9ucKMfzcSZJqE9FZHuup24Ru+di5bkEXo5uAVe3+JVRIfbNk7r3iHYgruPjkHe/VCzghrJVFsfak0fL7xHFNySC7kWyOXNtV1xaP6Y8twe7ciWMC5VrZVioOwXOhDqOSGvxQ+WaPtOhISSCrBGOCgU1hKqXFMj2HUiG8VOlxfbMXG0sqMmbTQQ== justin@seely.dev
+            networkData: |-
+              version: 1
+              config:
+                - type: physical
+                  name: enp1s0
+                  subnets:
+                    - type: dhcp
+                - type: nameserver
+                  address:
+                    - '8.8.8.8'
+                    - '8.8.4.4'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ubuntu-test
+spec:
+  selector:
+    vmi.kubevirt.io/name: ubuntu-test
+  type: LoadBalancer
+  ports:
+    - port: 22
+      targetPort: 22
