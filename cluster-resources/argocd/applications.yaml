@@ -1,15 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: homelab-applications
+  name: cluster-services
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    path: cluster-resources/applications
+    path: cluster-resources/core-services
     repoURL: 'git@github.com:jseely/talos-config.git'
     targetRevision: HEAD
   destination:
-    namespace: cluster-applications
+    namespace: core-services
     server: 'https://kubernetes.default.svc'
