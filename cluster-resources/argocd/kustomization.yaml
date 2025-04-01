@@ -5,3 +5,13 @@ resources:
 - namespace.yaml
 - https://raw.githubusercontent.com/argoproj/argo-cd/v2.7.2/manifests/core-install.yaml
 - applications.yaml
+# TODO: Figure out how to get this patch working
+# patches:
+#   - target:
+#       kind: ConfigMap
+#       name: argocd-cm
+#     patch: |
+#       apiVersion: v1
+#       kind: ConfigMap
+#       data:
+#         resource.exclusions: "- apiGroups:\\n    - cilium.io\\n  kinds:\\n    - CiliumIdentity\\n  clusters:\\n    - '*'"
