@@ -3,7 +3,6 @@ kind: Gateway
 metadata:
   name: cilium-gateway
 spec:
-  gatewayClassName: cilium-gateway
   addresses:
   - value: "10.0.144.99"
   listeners:
