@@ -6,6 +6,11 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true
   source:
     path: cluster-resources/core-services
     repoURL: 'git@github.com:jseely/talos-config.git'
