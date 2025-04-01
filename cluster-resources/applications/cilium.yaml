@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium-resources
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    path: cluster-resources/cilium
+    repoURL: 'git@github.com:jseely/talos-config.git'
+    targetRevision: HEAD
+  destination:
+    namespace: cluster-applications
+    server: 'https://kubernetes.default.svc'
