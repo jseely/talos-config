@@ -1,0 +1,27 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: cilium-gateway
+spec:
+  gatewayClassName: cilium-gateway
+  addresses:
+  - value: "10.0.144.99"
+  listeners:
+  - name: http
+    hostname: "*.seely.dev"
+    protocol: HTTP
+    port: 80
+    allowRoutes:
+      namespaces:
+        from: ALL
+  - name: https
+    hostname: "*.seely.dev"
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: cilium-gateway-cert
+    allowRoutes:
+      namespaces:
+        from: ALL

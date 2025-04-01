@@ -6,4 +6,5 @@ resources:
 - local-path-provisioner/
 - kubevirt/
 - cert-manager/
+- gateway/
 - registry/
