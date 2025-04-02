@@ -18,7 +18,7 @@ machine:
   install:
     extraKernelArgs:
       - talos.platform=metal
-    image: factory.talos.dev/installer/4d85c6d034a422ff186a3613e05d444cd3e0602731164a25a7445cedc90dcae8:v1.9.5
+    image: factory.talos.dev/installer/60b42e4f2f1eaee545c2436154a21f67ad285e596c106a1fb8f827954a8ed391:v1.9.5
     wipe: true
   features:
     kubePrism:

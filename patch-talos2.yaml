@@ -1,0 +1,14 @@
+machine:
+  network:
+    hostname: talos2
+    interfaces:
+      - interface: ens18
+        addresses:
+          - 10.0.144.106/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 10.0.144.1
+            metric: 1024
+        mtu: 1500
+  install:
+    disk: /dev/sda
