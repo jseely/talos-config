@@ -1,19 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gateway
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cilium-gateway-cert
+  namespace: gateway
+spec:
+  issuerRef:
+    name: cloudflare-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  dnsNames:
+    - "*.seely.dev"
+  secretName: cilium-gateway-cert
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: cilium-gateway
+  namespace: gateway
 spec:
   gatewayClassName: cilium
-  addresses:
-  - value: "10.0.144.99"
   listeners:
-  - name: http
-    hostname: "*.seely.dev"
-    protocol: HTTP
-    port: 80
-    allowRoutes:
-      namespaces:
-        from: ALL
   - name: https
     hostname: "*.seely.dev"
     protocol: HTTPS
@@ -22,6 +33,6 @@ spec:
       mode: Terminate
       certificateRefs:
       - name: cilium-gateway-cert
-    allowRoutes:
+    allowedRoutes:
       namespaces:
-        from: ALL
+        from: All
