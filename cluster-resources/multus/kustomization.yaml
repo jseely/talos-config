@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml
+patches:
+  - target:
+      kind: DaemonSet
+      name: kube-multus-ds
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/volumes/8/hostPath/path
+        value: /var/run/netns
+      - op: replace
+        path: /spec/template/spec/initContainers/0/command
+        value:
+          - "/usr/src/multus-cni/bin/install_multus"
+          - "-d"
+          - "/host/opt/cni/bin"
+          - "-t"
+          - "thick"
+      - op: add
+        path: /spec/template/spec/initContainers/-
+        value:
+          command:
+            - "/install-cni.sh"
+          image: ghcr.io/siderolabs/install-cni:v1.7.0
+          name: install-cni
+          securityContext:
+            privileged: true
+          volumeMounts:
+          - mountPath: /host/opt/cni/bin
+            mountPropagation: Bidirectional
+            name: cnibin

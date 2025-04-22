@@ -17,3 +17,4 @@ gatewayAPI:
   enableAppProtocol: true
 l2announcements:
   enabled: true
+cni.exclusive: false
