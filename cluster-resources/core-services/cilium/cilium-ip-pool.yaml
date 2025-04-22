@@ -4,5 +4,6 @@ metadata:
   name: default-pool
 spec:
   blocks:
+    - cidr: "10.0.144.48/32"
     - start: 10.0.144.200
       stop: 10.0.144.250
