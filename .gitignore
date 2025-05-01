@@ -1,6 +1,5 @@
 talosconfig
 secrets.yaml
-talos1.yaml
-talos2.yaml
+/talos*.yaml
 controlplane.yaml
 worker.yaml
