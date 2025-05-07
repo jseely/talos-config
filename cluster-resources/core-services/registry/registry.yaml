@@ -64,7 +64,7 @@ metadata:
   namespace: registry
 spec:
   parentRefs:
-    - name: cilium-gateway
+    - name: nginx-gateway
       namespace: gateway
   hostnames:
     - reg.seely.dev

@@ -1,0 +1,16 @@
+# kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: metallb-system
+resources:
+- github.com/metallb/metallb/config/native?ref=v0.14.9
+- address-pool.yaml
+- l2-advertisement.yaml
+patches:
+  - target:
+      kind: DaemonSet
+      name: speaker
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: "--ignore-exclude-lb"

@@ -41,9 +41,9 @@ serviceDns:
   loadBalancerIPv6: ""
 
   # -- Annotations for the DNS service
-  annotations: {}
+  annotations:
     # metallb.universe.tf/address-pool: network-services
-    # metallb.universe.tf/allow-shared-ip: pihole-svc
+    metallb.universe.tf/allow-shared-ip: pihole-svc
 
   # -- Labels for the DNS service
   extraLabels:
@@ -72,9 +72,9 @@ serviceDhcp:
   loadBalancerIPv6: ""
 
   # -- Annotations for the DHCP service
-  annotations: {}
+  annotations:
     # metallb.universe.tf/address-pool: network-services
-    # metallb.universe.tf/allow-shared-ip: pihole-svc
+    metallb.universe.tf/allow-shared-ip: pihole-svc
   # -- Labels for the DHCP service
   extraLabels:
     {}
@@ -115,9 +115,9 @@ serviceWeb:
   loadBalancerIPv6: ""
 
   # -- Annotations for the DHCP service
-  annotations: {}
+  annotations:
     # metallb.universe.tf/address-pool: network-services
-    # metallb.universe.tf/allow-shared-ip: pihole-svc
+    metallb.universe.tf/allow-shared-ip: pihole-svc
 
   # -- Labels for the web interface service
   extraLabels:
@@ -265,6 +265,7 @@ admin:
 # -- extraEnvironmentVars is a list of extra enviroment variables to set for pihole to use. You can use either scalars or project cm, secrets or pod fields via valueFrom
 extraEnvVars:
   DNSMASQ_LISTENING: all
+  FTLCONF_dns_listeningMode: all
   # TZ: UTC
   # Project a variable
   # SOME_VAR:
@@ -356,20 +357,23 @@ dnsmasq:
   enableCustomDnsMasq: true
 
   # -- Add upstream dns servers. All lines will be added to the pihole dnsmasq configuration
-  upstreamServers:
-    - server=/pve.seely.dev/10.0.144.50
-    - server=/pve1.seely.dev/10.0.144.51
-    - server=/pvc.seely.dev/10.0.144.50
-    - server=/pvc.seely.dev/10.0.144.51
-    - server=/talos1.homelab.seely.dev/10.0.144.105
-    - server=/reg.seely.dev/10.0.144.200
-
-
+  upstreamServers: []
   # - server=/foo.bar/192.168.178.10
   # - server=/bar.foo/192.168.178.11
 
   # -- Add custom dns entries to override the dns resolution. All lines will be added to the pihole dnsmasq configuration.
-  customDnsEntries: []
+  customDnsEntries:
+    - address=/pve.seely.dev/10.0.144.50
+    - address=/pve1.seely.dev/10.0.144.51
+    - address=/pvc.seely.dev/10.0.144.50
+    - address=/pvc.seely.dev/10.0.144.51
+    - address=/talos1.homelab.seely.dev/10.0.144.105
+    - address=/talos2.homelab.seely.dev/10.0.144.106
+    - address=/talos3.homelab.seely.dev/10.0.144.107
+    - address=/kube.homelab.seely.dev/10.0.144.105
+    - address=/kube.homelab.seely.dev/10.0.144.106
+    - address=/kube.homelab.seely.dev/10.0.144.107
+    - address=/reg.seely.dev/10.0.144.226
   # - address=/foo.bar/192.168.178.10
   # - address=/bar.foo/192.168.178.11
 
@@ -446,7 +450,7 @@ webHttps: "443"
 hostname: ""
 
 # -- should the container use host network
-hostNetwork: "true"
+hostNetwork: "false"
 
 # -- should container run in privileged mode
 privileged: "true"

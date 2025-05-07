@@ -5,4 +5,3 @@ resources:
 - kubevirt.yaml
 - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.61.5/cdi-cr.yaml
 - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.61.5/cdi-operator.yaml
-- cdi-uploadproxy-endpoint.yaml

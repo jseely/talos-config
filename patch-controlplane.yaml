@@ -1,7 +1,9 @@
 machine:
   kubelet:
     extraArgs:
-      rotate-server-certificates: "true"
+# Use talos cloud controller instead
+#      cloud-provider: external
+      rotate-server-certificates: true
     extraMounts:
       - destination: /var/local-path-provisioner
         type: bind
@@ -21,6 +23,13 @@ machine:
     image: factory.talos.dev/installer/60b42e4f2f1eaee545c2436154a21f67ad285e596c106a1fb8f827954a8ed391:v1.9.5
     wipe: true
   features:
+# Use talos cloud controller instead
+#    kubernetesTalosAPIAccess:
+#      enabled: true
+#      allowedRoles:
+#        - os:reader
+#      allowedKubernetesNamespaces:
+#        - kube-system
     kubePrism:
       enabled: true
       port: 7445
@@ -33,8 +42,9 @@ cluster:
     endpoint: https://kube.homelab.seely.dev:6443
   clusterName: talos-homelab
   network:
-    cni:
-      name: none
+# Disable cni install for cilium
+#    cni:
+#      name: none
     podSubnets:
       - 10.244.0.0/16
     serviceSubnets:
@@ -43,8 +53,13 @@ cluster:
     certSANs:
       - kube.homelab.seely.dev
   proxy:
-    disabled: true
+    extraArgs:
+      ipvs-strict-arp: true
+# Disable kubeproxy for cilium install
+#    disabled: true
   extraManifests:
     - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
     - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+# Use talos cloud controller instead
+#    - https://raw.githubusercontent.com/siderolabs/talos-cloud-controller-manager/main/docs/deploy/cloud-controller-manager.yml
   allowSchedulingOnControlPlanes: true
