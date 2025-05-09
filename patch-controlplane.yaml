@@ -15,6 +15,7 @@ machine:
   network:
     nameservers:
       - 10.0.144.249
+      - 10.0.144.1
     kubespan:
       enabled: true
   install:

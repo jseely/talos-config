@@ -9,11 +9,13 @@ machine:
           stp:
             enabled: true
           interfaces:
-            - ens18
+            - eno3
+            - eno4
         routes:
           - network: 0.0.0.0/0
             gateway: 10.0.144.1
             metric: 1024
         mtu: 1500
   install:
-    disk: /dev/sda
+    diskSelector:
+      busPath: /pci0000:00/0000:00:02.2/0000:02:00.0/host1/target1:2:0/1:2:0:0
