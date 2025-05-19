@@ -15,6 +15,7 @@ spec:
     group: cert-manager.io
   dnsNames:
     - "*.seely.dev"
+    - "*.homelab.seely.dev"
   secretName: nginx-gateway-cert
 ---
 apiVersion: gateway.nginx.org/v1alpha1
@@ -40,6 +41,17 @@ spec:
   listeners:
   - name: https
     hostname: "*.seely.dev"
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: nginx-gateway-cert
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: homelab-https
+    hostname: "*.homelab.seely.dev"
     protocol: HTTPS
     port: 443
     tls:
